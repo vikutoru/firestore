@@ -1,49 +1,63 @@
-import React, { Component } from 'react';
-import { StyteSheet, View, Text, Button, TextInput} from 'react-native';
-import firebase from 'react—native—firebase';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { StyleSheet } from "react-native";
 
-export default class Home extends Component{
-constructor() {
-super( );
-this.state = {
-    title : '',
-    description: ''
-}
+// Navigation
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+// Components
+import CreateUserScreen from "./screens/CreateUserScreen";
+import UserDetailScreen from "./screens/UserDetailScreen";
+import UsersList from "./screens/UsersList";
+
+const Stack = createStackNavigator();
+
+function MyStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#621FF7",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+      }}
+    >
+      <Stack.Screen
+        name="UsersList"
+        component={UsersList}
+        options={{ title: "Users List" }}
+      />
+      <Stack.Screen
+        name="CreateUserScreen"
+        component={CreateUserScreen}
+        options={{ title: "Create a New User" }}
+      />
+      <Stack.Screen
+        name="UserDetailScreen"
+        component={UserDetailScreen}
+        options={{ title: "User Detail" }}
+      />
+    </Stack.Navigator>
+  );
 }
 
-handleLogout = async () => {
-await firebase.auth().signOut();
-this.props.navigation.replace('Login');
-};
-
-handleTextInput = field => text => {
-this.setState({ [field] : text });
-}
-
-handleSave = () => {
-firebase.firestore().collection('posts' ).add(this.state);
-this.setState({title:'', description: '' });
-}
-render() {
-return (
-<View style={styles.wrapper}>
-<Text>Home</Text>
-<Text>Title</Text>
-<TextInput onChangeText={this.handteTextInput( 'title')} placeholder="description" value={this.state.title}
-/>
-
-<Text>Descriptions</Text>
-<Textlnput onChangeText={this.handieTextInput('description')} placeholder='description' value=
-{this.state.description}/>
-<Button title="Save" color="green" onPress={this.handleSave}></Button>
-<Button title="LOGOUT" color="blue" onPress={this.handleLogout} />
-</View>
-);
-}
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyStack />
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
-    wrapper: {
-        height: '100%'
-    }
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
